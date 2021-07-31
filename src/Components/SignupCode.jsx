@@ -13,22 +13,37 @@ if (!firebase.apps.length) {
 
 const SignupCode = () => {
     const [theUser, setTheUser] = useState({})
+    const [invEmail, setInvEmail] = useState({})
+    const [invPass, setInvPass] = useState({})
 
     const getFieldValue = (e) => {
 
-        if(e.target.name === "email"){
-            const isEmailValid = 
+        let isFormValid = true;
+        if (e.target.name === "email") {
+            const isEmailValid = /\S+@\S+\.\S+/.test(e.target.value)
+            setInvEmail(isEmailValid);
+            isFormValid = isEmailValid;
         }
-        const copiedUser = {...theUser}
-        copiedUser[e.target.name] = e.target.value;
-        setTheUser(copiedUser);
+
+        if (e.target.name === "password") {
+            const ispasswordValid = (/[0-9]/g.test(e.target.value) && e.target.value.length > 5)
+            setInvPass(ispasswordValid);
+            isFormValid = ispasswordValid;
+        }
+
+        if (isFormValid) {
+            const copiedUser = { ...theUser }
+            copiedUser[e.target.name] = e.target.value;
+            setTheUser(copiedUser);
+        }
+
     }
     console.log(theUser)
     const email = "davidjuhan3323@gmail.com"
     const password = "jadhahdj23"
 
     const handleEmailSignUp = (e) => {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        firebase.auth().createUserWithEmailAndPassword(theUser.email, password)
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
@@ -45,9 +60,11 @@ const SignupCode = () => {
     return (
 
         <div>
-            <SignupPage 
-            handleEmailSignUp={handleEmailSignUp}
-            getFieldValue= {getFieldValue}
+            <SignupPage
+                handleEmailSignUp={handleEmailSignUp}
+                getFieldValue={getFieldValue}
+                invEmail={!invEmail}
+                invPass={!invPass}
             ></SignupPage>
         </div>
     );
