@@ -39,11 +39,9 @@ const SignupCode = () => {
 
     }
     console.log(theUser)
-    const email = "davidjuhan3323@gmail.com"
-    const password = "jadhahdj23"
 
     const handleEmailSignUp = (e) => {
-        firebase.auth().createUserWithEmailAndPassword(theUser.email, password)
+        firebase.auth().createUserWithEmailAndPassword(theUser.email, theUser.password)
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
